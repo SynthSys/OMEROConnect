@@ -35,3 +35,14 @@ docker build --tag omero_jupyter .
 
 docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data/omero_data omero_jupyter
 ```
+
+If you also wish to mount a directory of Jupyter notebooks, for example the notebooks from this Git project:
+```
+docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data/omero_data -v /E/projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/connect_notebooks omero_jupyter
+```
+*N.B.* Remember if you are running these containers on a Windows host, you must enable 'Shared Drives' for the relevant hard drive in the Docker Desktop application settings. You may also have to enable incoming connections in the Windows Firewall or open up access to port 445, according to the instructions at https://docs.docker.com/docker-for-windows/#firewall-rules-for-shared-drives. For initialising the Docker container, it may be necessary to use a Windows-style file path, e.g.:
+```
+docker run --name omero-jupyter -p 8888:8888 -v D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw omero_jupyter
+```
+
+Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, look in `/home/jovyan/.local/share/jupyter/runtime/notebook_cookie_secret` on the Docker container for the token.

@@ -9,6 +9,8 @@ The toolkit is intended to be deployed as Docker containers. There are three con
 Once the repository has been cloned, each Docker image must be built in turn in the following order. To build and run the `omero_base` image:
 ```
 # OMERO Base image
+cd omero_base
+
 docker build --tag omero_base .
 
 # run in both detached (-d) and foreground (-t) mode
@@ -17,6 +19,8 @@ docker run -t -d --name omero-base --entrypoint /bin/bash omero_base
 Next, build the uploader image and run the container with a local directory containing microscopy images mounted:
 ```
 # OMERO Uploader image
+cd ../omero_uploader
+
 docker build --tag omero_uploader .
 
 # run in both detached (-d) and foreground (-t) mode
@@ -25,6 +29,8 @@ docker run -t -d --name omero-uploader -v /E/projects/Omero_data:/var/data/omero
 Finally, build and run the Jupyter image with the same mount point in the running container:
 ```
 # OMERO Jupyter image
+cd ../omero_jupyter
+
 docker build --tag omero_jupyter .
 
 docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data/omero_data omero_jupyter

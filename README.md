@@ -45,5 +45,5 @@ docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data
 docker run --name omero-jupyter -p 8888:8888 -v D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw omero_jupyter
 ```
 
-Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, look in `/home/jovyan/.local/share/jupyter/runtime/notebook_cookie_secret` on the Docker container for the token.
+Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, run `docker exec -it omero-jupyter /bin/bash` to ssh into the running container and then run `jupyter notebook list` to retrieve the URL and token. The Jupyter notebook can be accessed through the browser on your host machine via the URL `http://127.0.0.1:8888/?token=[AUTH_TOKEN]`.
 

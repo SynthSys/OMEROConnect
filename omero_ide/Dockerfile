@@ -37,6 +37,11 @@ RUN service ssh restart
 # CMD ["service ssh restart"]
 # CMD ["start-notebook.sh"]
 
+EXPOSE 22
+CMD ["/etc/init.d/ssh", "start"]
+
+RUN ln -s /opt/pycharm-2019.2.4/bin/pycharm.sh /usr/bin/pycharm
+
 USER $NB_UID
 WORKDIR $HOME
 
@@ -46,11 +51,5 @@ RUN wget -O /tmp/pycharm-2019.2.4.tar.gz https://download.jetbrains.com/python/p
     && tar -xf /tmp/pycharm-2019.2.4.tar.gz --strip-components=1 -C /opt/pycharm-2019.2.4 \
     && rm /tmp/pycharm-2019.2.4.tar.gz
 
-EXPOSE 22
-
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
-
-# ENV DISPLAY :0
-# CMD xeyes
-ENTRYPOINT ["/bin/bash"]

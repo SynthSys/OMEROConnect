@@ -15,22 +15,22 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     libx11-6 \
-	x11-apps \
+    x11-apps \
     libxext-dev \
-	libxtst-dev \
-	libxrender-dev \
+    libxtst-dev \
+    libxrender-dev \
     ttf-dejavu \
-	openssh-server \
-	vim \
-	xorg \
-	openbox \
+    openssh-server \
+    vim \
+    xorg \
+    openbox \
  && rm -rf /var/lib/apt/lists/*
 
 # RUN echo "jovyan" | passwd --stdin jovyan
 RUN echo "jovyan:jovyan" | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#AddressFamily any/AddressFamily inet/' /etc/ssh/sshd_config
-RUN service ssh restart
+# RUN service ssh restart
 
 # Configure container startup
 # ENTRYPOINT ["tini", "-g", "--"]
@@ -38,7 +38,10 @@ RUN service ssh restart
 # CMD ["start-notebook.sh"]
 
 EXPOSE 22
-CMD ["/etc/init.d/ssh", "start"]
+# CMD ["/etc/init.d/ssh", "start"]
+COPY start.sh /usr/bin/start.sh
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["sh", "/usr/bin/start.sh"]
 
 RUN ln -s /opt/pycharm-2019.2.4/bin/pycharm.sh /usr/bin/pycharm
 

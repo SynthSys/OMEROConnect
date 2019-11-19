@@ -54,4 +54,6 @@ cd ../omero_ide
 
 docker build --tag omero_ide .
 
-docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=localhost:0 -p 2222:22 --entrypoint /bin/bash omero_ide
+docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=localhost:0 -p 2222:22 omero_ide
+
+When a container is instantiated and run, the SSH server is automatically started and you can use an X11-enabled client application (such as MobaXTerm or XMing) or simply `ssh -X jovyan@localhost -p 2222` to access the container; the password for the `jovyan` user is in the Dockerfile. Once inside the container, run `pycharm &` to launch the Pycharm IDE. If the container is stopped, simply running `docker start omero-ide` again will restart it and you can resume development (and access any files you have been working on). *N.B.* removing the container will delete any files you have been working on; either mount your code in a rw directory on your host or sync the files you are working on regularly.

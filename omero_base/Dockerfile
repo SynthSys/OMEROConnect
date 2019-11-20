@@ -57,8 +57,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 
 # Create Symbolic Links to libcrypto and libssl libraries so that OMERO client works
-RUN ln -s /usr/lib/x86_64-linux-gnu/libssl.so.1.0.2 /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0
-RUN ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.2 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libssl.so.1.0.2 /usr/lib/x86_64-linux-gnu/libssl.so.1.0.0
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.2 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0
 
 USER $NB_UID
 WORKDIR $HOME
@@ -94,7 +94,8 @@ RUN cd /tmp && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    'python-omero=5.4.10' && \
+    'python-omero=5.4.10' \
+    'openssl=1.0.*' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \

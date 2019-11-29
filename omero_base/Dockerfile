@@ -39,6 +39,8 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
 COPY fix-permissions /usr/local/bin/fix-permissions
 # make build robust by removing any potential Windows CRLF chars from script
 RUN dos2unix /usr/local/bin/fix-permissions && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
+# ensure script has executable permissions
+RUN chmod +x /usr/local/bin/fix-permissions
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc

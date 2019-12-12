@@ -47,3 +47,13 @@ docker run --name omero-jupyter -p 8888:8888 -v D:\projects\OMEROConnect\omero_j
 
 Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, run `docker exec -it omero-jupyter /bin/bash` to ssh into the running container and then run `jupyter notebook list` to retrieve the URL and token. The Jupyter notebook can be accessed through the browser on your host machine via the URL `http://127.0.0.1:8888/?token=[AUTH_TOKEN]`.
 
+# OMERO IDE image
+The IDE image is useful if you are developing with the OMERO Python library, and perhaps you wish to modify the PyOmeroUpload code itself. The image contains the Pycharm IDE and uses X11 forwarding so that you can develop code in the GUI as if it was running natively; this is helpful for isolating your development environment from your host system, especially if your host systems is Windows.
+
+cd ../omero_ide
+
+docker build --tag omero_ide .
+
+docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=localhost:0 -p 2222:22 omero_ide
+
+When a container is instantiated and run, the SSH server is automatically started and you can use an X11-enabled client application (such as MobaXTerm or XMing) or simply `ssh -X jovyan@localhost -p 2222` to access the container; the password for the `jovyan` user is in the Dockerfile. Once inside the container, run `pycharm &` to launch the Pycharm IDE. If the container is stopped, simply running `docker start omero-ide` again will restart it and you can resume development (and access any files you have been working on). *N.B.* removing the container will delete any files you have been working on; either mount your code in a rw directory on your host or sync the files you are working on regularly.

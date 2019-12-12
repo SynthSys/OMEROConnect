@@ -17,6 +17,7 @@ RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     sudo \
     locales \
+    dos2unix \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -35,7 +36,11 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
 # Add a script that we will use to correct permissions after running certain commands
-ADD fix-permissions /usr/local/bin/fix-permissions
+COPY fix-permissions /usr/local/bin/fix-permissions
+# make build robust by removing any potential Windows CRLF chars from script
+RUN dos2unix /usr/local/bin/fix-permissions && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
+# ensure script has executable permissions
+RUN chmod +x /usr/local/bin/fix-permissions
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc

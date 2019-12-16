@@ -54,5 +54,15 @@ RUN wget -O /tmp/pycharm-2019.2.4.tar.gz https://download.jetbrains.com/python/p
     && tar -xf /tmp/pycharm-2019.2.4.tar.gz --strip-components=1 -C /opt/pycharm-2019.2.4 \
     && rm /tmp/pycharm-2019.2.4.tar.gz
 
+# Run Pycharm once to initialise the files
+RUN pycharm &
+RUN sleep 30
+
+# Update Pycharm config to fix startup errors and allocate enough memory
+RUN sed -i 's/-XX:+UseConcMarkSweepGC/#-XX:+UseConcMarkSweepGC/' /opt/pycharm-2019.2.4/bin/pycharm.vmoptions
+RUN sed -i 's/-XX:+UseConcMarkSweepGC/#-XX:+UseConcMarkSweepGC/' /opt/pycharm-2019.2.4/bin/pycharm64.vmoptions
+RUN sed -i 's/-Xmx[0-9]*m/-Xmx2048m/' /opt/pycharm-2019.2.4/bin/pycharm.vmoptions
+RUN sed -i 's/-Xmx[0-9]*m/-Xmx2048m/' /opt/pycharm-2019.2.4/bin/pycharm64.vmoptions
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

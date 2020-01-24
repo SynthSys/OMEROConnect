@@ -66,3 +66,11 @@ RUN sed -i 's/-Xmx[0-9]*m/-Xmx2048m/' /opt/pycharm-2019.2.4/bin/pycharm64.vmopti
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
+
+# clone the repo with the PyUploader code
+RUN git clone --single-branch --branch master https://github.com/SynthSys/pyOmeroUpload /opt/pyOmeroUpload
+
+# Use pip to install the extra dependencies, since Conda updates GCC and breaks OMERO
+RUN pip install -r /opt/pyOmeroUpload/requirements.txt && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER

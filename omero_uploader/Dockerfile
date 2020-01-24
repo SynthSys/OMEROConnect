@@ -22,9 +22,16 @@ USER $NB_UID
 WORKDIR $HOME
 
 # clone the repo with the PyUploader code
-RUN git clone --single-branch --branch master https://github.com/SynthSys/pyOmeroUpload /opt/pyOmeroUpload
+# RUN git clone --single-branch --branch master https://github.com/SynthSys/pyOmeroUpload /opt/pyOmeroUpload
 
 # Use pip to install the extra dependencies, since Conda updates GCC and breaks OMERO
-RUN pip install -r /opt/pyOmeroUpload/requirements.txt && \
+# RUN pip install -r /opt/pyOmeroUpload/requirements.txt && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+RUN conda install --quiet --yes \
+    'pyomero-upload=1.0.0' && \
+    conda clean --all -f -y && \
+    npm cache clean --force && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER

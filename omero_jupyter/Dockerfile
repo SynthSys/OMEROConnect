@@ -36,6 +36,8 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+ADD requirements.txt /tmp
+
 # Install Jupyter Notebook, Lab, and Hub
 # Generate a notebook server config
 # Cleanup temporary files
@@ -43,7 +45,18 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
+    'six=1.14.0' \
+    'scipy=1.2.1' \
+    'scikit-learn=0.20.4' \
+    'matplotlib=2.2.4' \
+    'seaborn=0.8.1' \
+    'python-dateutil=2.6.1' \
+    'urllib3=1.25.7' \
+    'simplejson=3.17.0' \
+    'jmespath=0.9.3' \
+    'cryptography=2.8' \
     'notebook=5.7.8' && \
+    conda install --quiet --yes --file /tmp/requirements.txt && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
@@ -52,8 +65,9 @@ RUN conda install --quiet --yes \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-ADD requirements.txt /tmp
-RUN pip install -r /tmp/requirements.txt
+# ADD requirements.txt /tmp
+# RUN pip install -r /tmp/requirements.txt
+
 
 EXPOSE 8888
 

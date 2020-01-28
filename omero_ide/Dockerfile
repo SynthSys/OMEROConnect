@@ -33,6 +33,17 @@ RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/s
 RUN sed -i 's/#AddressFamily any/AddressFamily inet/' /etc/ssh/sshd_config
 # RUN service ssh restart
 
+# Install Python packaging tools
+RUN conda install --quiet --yes \
+    'pyscaffold=2.5.8' && \
+    conda clean --all -f -y && \
+    npm cache clean --force && \
+    jupyter notebook --generate-config && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
 # Configure container startup
 # ENTRYPOINT ["tini", "-g", "--"]
 # CMD ["service ssh restart"]
@@ -56,6 +67,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     libsecret-1-0 \
     libgtk-3-0 \
     libxss1
+
 RUN dpkg -i codium_1.41.1-1576787344_amd64.deb
 # RUN apt-get update && apt-get install -yq --no-install-recommends \
     # gdebi-core \
@@ -78,10 +90,6 @@ RUN wget -O /tmp/pycharm-2019.2.4.tar.gz https://download.jetbrains.com/python/p
     && tar -xf /tmp/pycharm-2019.2.4.tar.gz --strip-components=1 -C /opt/pycharm-2019.2.4 \
     && rm /tmp/pycharm-2019.2.4.tar.gz
 
-# Run Pycharm once to initialise the files
-RUN pycharm &
-RUN sleep 30
-
 # Update Pycharm config to fix startup errors and allocate enough memory
 RUN sed -i 's/-XX:+UseConcMarkSweepGC/#-XX:+UseConcMarkSweepGC/' /opt/pycharm-2019.2.4/bin/pycharm.vmoptions
 RUN sed -i 's/-XX:+UseConcMarkSweepGC/#-XX:+UseConcMarkSweepGC/' /opt/pycharm-2019.2.4/bin/pycharm64.vmoptions
@@ -99,6 +107,9 @@ RUN git clone --single-branch --branch master https://github.com/SynthSys/pyOmer
 RUN conda install --quiet --yes --file /home/$NB_USER/work/pyOmeroUpload/requirements.txt && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+# Initialise the bash shell for Conda
+RUN /opt/conda/bin/conda init bash
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

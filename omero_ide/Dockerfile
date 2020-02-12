@@ -1,6 +1,6 @@
 # omero_ide
 
-ARG BASE_CONTAINER=omero_jupyter
+ARG BASE_CONTAINER=biordm/omero-connect:omero_jupyter
 FROM $BASE_CONTAINER
 # FROM openjdk:11
 

@@ -1,6 +1,6 @@
 # omero_jupyter
 
-ARG BASE_CONTAINER=omero_uploader
+ARG BASE_CONTAINER=biordm/omero-connect:omero_uploader
 FROM $BASE_CONTAINER
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"

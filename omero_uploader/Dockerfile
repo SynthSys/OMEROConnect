@@ -1,6 +1,6 @@
 # omero_uploader
 
-ARG BASE_CONTAINER=omero_base
+ARG BASE_CONTAINER=biordm/omero-connect:omero_base
 FROM $BASE_CONTAINER
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"

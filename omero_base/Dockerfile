@@ -99,10 +99,27 @@ RUN cd /tmp && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    'python-omero=5.4.10' \
-    'openssl=1.0.*' && \
+    'python-omero=5.4.10' && \
+    # 'openssl=1.0.*' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+USER root
+
+# Found we have to install the old SSL and crypto libraries, probably due to OpenJDK base image update
+RUN cd /tmp && \
+    wget --quiet http://nl.archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6-udeb_2.27-3ubuntu1_amd64.udeb && \
+    wget --quiet http://nl.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libcrypto1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb && \
+    wget --quiet http://nl.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb && \
+    echo "52e0bb2c1f552da8b7120ff3d6a2b38a *libc6-udeb_2.27-3ubuntu1_amd64.udeb" && \
+    echo "d8c283d6b2b587c6b58e163de75a7f66 *libcrypto1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb" && \
+    echo "83633d8dc2c32363914282ac32087d7e *libssl1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb" && \
+    dpkg -i libc6-udeb_2.27-3ubuntu1_amd64.udeb && \
+    dpkg -i libcrypto1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb && \
+    dpkg -i libssl1.0.0-udeb_1.0.2g-1ubuntu4_amd64.udeb
+
+USER $NB_UID
+WORKDIR $HOME

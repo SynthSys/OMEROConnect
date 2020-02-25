@@ -18,6 +18,9 @@ RUN apt-get update && apt-get -yq dist-upgrade \
     sudo \
     locales \
     dos2unix \
+    mc \
+    nano \
+    vim \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \

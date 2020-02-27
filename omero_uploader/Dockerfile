@@ -1,4 +1,5 @@
 # omero_uploader
+ARG PYOMERO_UPLOAD_VERSION=1.1.0
 
 ARG BASE_CONTAINER=biordm/omero-connect:omero_base
 FROM $BASE_CONTAINER
@@ -13,6 +14,8 @@ USER root
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
+ENV PYOMERO_UPLOAD_VERSION=$PYOMERO_UPLOAD_VERSION
+
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     git \
@@ -29,7 +32,7 @@ WORKDIR $HOME
 #     fix-permissions $CONDA_DIR && \
 #     fix-permissions /home/$NB_USER
 RUN conda install --quiet --yes \
-    'pyomero-upload=1.1.0' && \
+    "pyomero-upload=${PYOMERO_UPLOAD_VERSION}" && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \

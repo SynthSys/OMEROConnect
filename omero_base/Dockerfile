@@ -1,7 +1,8 @@
 # omero_base
-
 ARG BASE_CONTAINER=openjdk:8
 FROM $BASE_CONTAINER
+
+ARG OMERO_VERSION=5.4.10
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"
 ARG NB_USER="jovyan"
@@ -36,7 +37,8 @@ ENV CONDA_DIR=/opt/conda \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
 ENV PATH=$CONDA_DIR/bin:$PATH \
-    HOME=/home/$NB_USER
+    HOME=/home/$NB_USER \
+    OMERO_VERSION=$OMERO_VERSION
 
 # Add a script that we will use to correct permissions after running certain commands
 COPY fix-permissions /usr/local/bin/fix-permissions
@@ -71,6 +73,9 @@ RUN ln -s /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.2 /usr/lib/x86_64-linux-gnu
 USER $NB_UID
 WORKDIR $HOME
 
+# Setup work directory for backward-compatibility
+RUN mkdir /home/$NB_USER/base
+
 # Fix permissions
 RUN fix-permissions /home/$NB_USER
 
@@ -102,7 +107,7 @@ RUN cd /tmp && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    'python-omero=5.4.10' && \
+    "python-omero=${OMERO_VERSION}" && \
     # 'openssl=1.0.*' && \
     conda clean --all -f -y && \
     npm cache clean --force && \

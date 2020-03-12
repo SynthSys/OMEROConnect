@@ -32,7 +32,7 @@ WORKDIR $HOME
 #     fix-permissions $CONDA_DIR && \
 #     fix-permissions /home/$NB_USER
 RUN conda install --quiet --yes \
-    "pyomero-upload=${PYOMERO_UPLOAD_VERSION}" && \
+    pyomero-upload=${PYOMERO_UPLOAD_VERSION} && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \

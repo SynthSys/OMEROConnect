@@ -1,3 +1,4 @@
+
 # OMEROConnect
 
 OMEROConnect is a Python toolkit designed to support uploading to and querying OMERO servers, the Open Microscopy Environment image data repository platform.
@@ -42,10 +43,30 @@ docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data
 ```
 *N.B.* Remember if you are running these containers on a Windows host, you must enable 'Shared Drives' for the relevant hard drive in the Docker Desktop application settings. You may also have to enable incoming connections in the Windows Firewall or open up access to port 445, according to the instructions at https://docs.docker.com/docker-for-windows/#firewall-rules-for-shared-drives. For initialising the Docker container, it may be necessary to use a Windows-style file path, e.g.:
 ```
-docker run --name omero-jupyter -p 8888:8888 -v D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw omero_jupyter
+docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
 ```
 
 Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, run `docker exec -it omero-jupyter /bin/bash` to ssh into the running container and then run `jupyter notebook list` to retrieve the URL and token. The Jupyter notebook can be accessed through the browser on your host machine via the URL `http://127.0.0.1:8888/?token=[AUTH_TOKEN]`.
+
+# DockerHub Images
+All of the images here are pre-built and available in the DockerHub image registry at [https://hub.docker.com/r/biordm/omero-connect](https://hub.docker.com/r/biordm/omero-connect). Usage instructions are found below.
+
+## Installation
+Each image can be installed or updated using the Docker pull command, for instance:
+```
+docker pull biordm/omero-connect:omero_uploader
+docker pull biordm/omero-connect:omero_jupyter
+```
+These pull commands can be executed in any order, since the child images automatically pull any required parent images.
+
+## Operation
+Once the OMEROConnect images are downloaded to the local Docker image repository, they can be run with slight modifications to the commands given previously, for instance:
+```
+docker run -t -d --name omero-uploader -v /E/projects/Omero_data:/var/data/omero_data --entrypoint /bin/bash biordm/omero-connect:omero_uploader
+```
+```
+docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
+```
 
 # OMERO IDE image
 The IDE image is useful if you are developing with the OMERO Python library, and perhaps you wish to modify the PyOmeroUpload code itself. The image contains the Pycharm and Codium IDEs and uses X11 forwarding so that you can develop code in the GUI as if it was running natively; this is helpful for isolating your development environment from your host system, especially if your host systems is Windows.
@@ -63,3 +84,13 @@ To mount a host folder on the guest file system in Windows:
 docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 omero_ide
 
 **N.B.** In the event that the Windows Firewall settings are configured to 'Block all incoming connections', that must be disabled and then the drive must be un-shared in the Docker Desktop settings, applied, then shared again and applied. Otherwise, the directory will appear to be mounted but none of the sub-directories and files will be available in the guest.
+
+## DockerHub Image
+As with the other images, the IDE image can be installed with the following command:
+```
+docker pull biordm/omero-connect:omero_ide
+```
+It can be run with a slightly modified command from before:
+```
+docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 biordm/omero-connect:omero_ide
+```

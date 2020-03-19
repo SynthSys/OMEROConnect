@@ -67,6 +67,10 @@ docker run -t -d --name omero-uploader -v /E/projects/Omero_data:/var/data/omero
 ```
 docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
 ```
+To access a `bash` terminal in the resulting Docker containers, run commands such as:
+```
+docker exec -it omero-uploader /bin/bash
+```
 
 # OMERO IDE image
 The IDE image is useful if you are developing with the OMERO Python library, and perhaps you wish to modify the PyOmeroUpload code itself. The image contains the Pycharm and Codium IDEs and uses X11 forwarding so that you can develop code in the GUI as if it was running natively; this is helpful for isolating your development environment from your host system, especially if your host systems is Windows.

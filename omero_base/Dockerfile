@@ -2,7 +2,8 @@
 ARG BASE_CONTAINER=openjdk:8
 FROM $BASE_CONTAINER
 
-ARG OMERO_VERSION=5.4.10
+ARG OMERO_VERSION=5.6.2
+ARG ZEROC_ICE_PACKAGE=zeroc-ice36-python
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"
 ARG NB_USER="jovyan"
@@ -80,17 +81,17 @@ RUN mkdir /home/$NB_USER/base
 RUN fix-permissions /home/$NB_USER
 
 # Install conda as jovyan and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION=4.6.14 \
-    CONDA_VERSION=4.7.10
+ENV MINICONDA_VERSION=py37_4.8.2 \
+    CONDA_VERSION=4.8.2
 
 RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "faa7cb0b0c8986ac3cacdbbd00fe4168 *Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
-    /bin/bash Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda2-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    echo "957d2f0f0701c3d1335e3b39f235d197837ad69a944fa6f5d8ad2c686b69df3b *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | sha256sum -c - && \
+    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
-    $CONDA_DIR/bin/conda config --system --prepend channels bioconda && \
+    $CONDA_DIR/bin/conda config --system --prepend channels ome && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
     $CONDA_DIR/bin/conda install --quiet --yes conda && \
@@ -107,7 +108,8 @@ RUN cd /tmp && \
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    "python-omero=${OMERO_VERSION}" && \
+    "${ZEROC_ICE_PACKAGE}" \
+    "omero-py=${OMERO_VERSION}" && \
     # 'openssl=1.0.*' && \
     conda clean --all -f -y && \
     npm cache clean --force && \

@@ -1,7 +1,8 @@
 # omero_uploader
-ARG PYOMERO_UPLOAD_VERSION=5.4.10_1.3.0
+ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
 
-ARG BASE_CONTAINER=biordm/omero-connect:omero_base
+# ARG BASE_CONTAINER=biordm/omero-connect:omero_base
+ARG BASE_CONTAINER=omero_base-5_6_2
 FROM $BASE_CONTAINER
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"
@@ -31,9 +32,11 @@ WORKDIR $HOME
 # RUN pip install -r /opt/pyOmeroUpload/requirements.txt && \
 #     fix-permissions $CONDA_DIR && \
 #     fix-permissions /home/$NB_USER
-RUN conda install --quiet --yes \
-    pyomero-upload=${PYOMERO_UPLOAD_VERSION} && \
-    conda clean --all -f -y && \
+# Uncomment this when the release is done in Git
+# RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@${PYOMERO_UPLOAD_VERSION}
+RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
+
+RUN conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \

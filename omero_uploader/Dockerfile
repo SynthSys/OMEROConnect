@@ -32,9 +32,9 @@ WORKDIR $HOME
 #     fix-permissions /home/$NB_USER
 # Uncomment this when the release is done in Git
 
-ENV PYOMERO_UPLOAD_VERSION=$PYOMERO_UPLOAD_VERSION
+#ENV PYOMERO_UPLOAD_VERSION=$PYOMERO_UPLOAD_VERSION
 
-RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@$PYOMERO_UPLOAD_VERSION
+RUN "pip install git+https://github.com/SynthSys/pyOmeroUpload.git@${PYOMERO_UPLOAD_VERSION}"
 # RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
 
 RUN conda clean --all -f -y && \

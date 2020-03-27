@@ -1,8 +1,6 @@
 # omero_uploader
 ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
-
-# ARG BASE_CONTAINER=biordm/omero-connect:omero_base
-ARG BASE_CONTAINER=omero_base-5_6_2
+ARG BASE_CONTAINER=biordm/omero-connect:omero_base-$PYOMERO_UPLOAD_VERSION
 FROM $BASE_CONTAINER
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"
@@ -33,8 +31,11 @@ WORKDIR $HOME
 #     fix-permissions $CONDA_DIR && \
 #     fix-permissions /home/$NB_USER
 # Uncomment this when the release is done in Git
-# RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@${PYOMERO_UPLOAD_VERSION}
-RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
+
+ENV PYOMERO_UPLOAD_VERSION=$PYOMERO_UPLOAD_VERSION
+
+RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@$PYOMERO_UPLOAD_VERSION
+# RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
 
 RUN conda clean --all -f -y && \
     npm cache clean --force && \

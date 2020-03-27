@@ -1,6 +1,7 @@
 # omero_ide
 
-ARG BASE_CONTAINER=biordm/omero-connect:omero_jupyter
+ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
+ARG BASE_CONTAINER=biordm/omero-connect:omero_jupyter-$PYOMERO_UPLOAD_VERSION
 FROM $BASE_CONTAINER
 # FROM openjdk:11
 

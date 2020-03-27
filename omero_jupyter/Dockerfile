@@ -1,6 +1,6 @@
 # omero_jupyter
-
-ARG BASE_CONTAINER=biordm/omero-connect:omero_uploader
+ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
+ARG BASE_CONTAINER=biordm/omero-connect:omero_uploader-$PYOMERO_UPLOAD_VERSION
 FROM $BASE_CONTAINER
 
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"

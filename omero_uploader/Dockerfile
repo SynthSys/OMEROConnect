@@ -3,6 +3,8 @@ ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
 ARG BASE_CONTAINER=biordm/omero-connect:omero_base-$PYOMERO_UPLOAD_VERSION
 FROM $BASE_CONTAINER
 
+ARG PYOMERO_UPLOAD_VERSION
+
 LABEL maintainer="SBS Research Data Management <bio_rdm@ed.ac.uk>"
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
@@ -32,9 +34,9 @@ WORKDIR $HOME
 #     fix-permissions /home/$NB_USER
 # Uncomment this when the release is done in Git
 
-#ENV PYOMERO_UPLOAD_VERSION=$PYOMERO_UPLOAD_VERSION
+ARG GIT_URL=https://github.com/SynthSys/pyOmeroUpload.git@$PYOMERO_UPLOAD_VERSION
 
-RUN "pip install git+https://github.com/SynthSys/pyOmeroUpload.git@${PYOMERO_UPLOAD_VERSION}"
+RUN pip install git+$GIT_URL
 # RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
 
 RUN conda clean --all -f -y && \

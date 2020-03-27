@@ -36,7 +36,7 @@ WORKDIR $HOME
 
 ARG GIT_URL=https://github.com/SynthSys/pyOmeroUpload.git@$PYOMERO_UPLOAD_VERSION
 
-RUN pip install git+$GIT_URL
+RUN pip install --upgrade git+$GIT_URL
 # RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
 
 RUN conda clean --all -f -y && \

@@ -39,11 +39,11 @@ docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data
 
 If you also wish to mount a directory of Jupyter notebooks, for example the notebooks from this Git project:
 ```
-docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data/omero_data -v /E/projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/connect_notebooks omero_jupyter
+docker run --name omero-jupyter -p 8888:8888 -v /E/projects/Omero_data:/var/data/omero_data -v /E/projects/omero_connect_demo/notebooks:/home/jovyan/work/connect_notebooks omero_jupyter
 ```
 *N.B.* Remember if you are running these containers on a Windows host, you must enable 'Shared Drives' for the relevant hard drive in the Docker Desktop application settings. You may also have to enable incoming connections in the Windows Firewall or open up access to port 445, according to the instructions at https://docs.docker.com/docker-for-windows/#firewall-rules-for-shared-drives. For initialising the Docker container, it may be necessary to use a Windows-style file path, e.g.:
 ```
-docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
+docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\omero_connect_demo\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
 ```
 
 Once the Docker container runs, it will report the URL for access to the command line output, including the Jupyter server access token. If you need to restart the Jupyter Docker container, keep a note of this token because it will not be displayed again on container restart; alternatively, run `docker exec -it omero-jupyter /bin/bash` to ssh into the running container and then run `jupyter notebook list` to retrieve the URL and token. The Jupyter notebook can be accessed through the browser on your host machine via the URL `http://127.0.0.1:8888/?token=[AUTH_TOKEN]`.
@@ -65,7 +65,7 @@ Once the OMEROConnect images are downloaded to the local Docker image repository
 docker run -t -d --name omero-uploader -v /E/projects/Omero_data:/var/data/omero_data --entrypoint /bin/bash biordm/omero-connect:omero_uploader
 ```
 ```
-docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\OMEROConnect\omero_jupyter\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
+docker run --name omero-jupyter -p 8888:8888 -v 'D:\projects\omero_connect_demo\notebooks:/home/jovyan/work/query_notebooks:rw' omero_jupyter
 ```
 To access a `bash` terminal in the resulting Docker containers, run commands such as:
 ```
@@ -85,7 +85,7 @@ When a container is instantiated and run, the SSH server is automatically starte
 
 To mount a host folder on the guest file system in Windows:
 
-docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 omero_ide
+docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/omero_connect_demo/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 omero_ide
 
 **N.B.** In the event that the Windows Firewall settings are configured to 'Block all incoming connections', that must be disabled and then the drive must be un-shared in the Docker Desktop settings, applied, then shared again and applied. Otherwise, the directory will appear to be mounted but none of the sub-directories and files will be available in the guest.
 
@@ -96,5 +96,5 @@ docker pull biordm/omero-connect:omero_ide
 ```
 It can be run with a slightly modified command from before:
 ```
-docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/OMEROConnect/omero_jupyter/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 biordm/omero-connect:omero_ide
+docker run -it -u root --name omero-ide -v /tmp/.X11-unix:/tmp/.X11-unix -v '/C/Users/J Bloggs/Documents/code_projects/omero_connect_demo/notebooks:/home/jovyan/work/query_notebooks:rw' -v '/C/Users/J Bloggs/Documents/code_projects/pyOmeroUpload:/home/jovyan/work/pyOmeroUpload:rw' -e DISPLAY=localhost:0 -p 2222:22 biordm/omero-connect:omero_ide
 ```

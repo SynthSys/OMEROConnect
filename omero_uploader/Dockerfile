@@ -1,5 +1,5 @@
 # omero_uploader
-ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.0.0
+ARG PYOMERO_UPLOAD_VERSION=v5.6.2_2.2.0
 ARG BASE_CONTAINER=biordm/omero-connect:omero_base
 FROM $BASE_CONTAINER
 

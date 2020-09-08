@@ -39,7 +39,12 @@ ARG GIT_URL=https://github.com/SynthSys/pyOmeroUpload.git@$PYOMERO_UPLOAD_VERSIO
 RUN pip install --upgrade git+$GIT_URL
 # RUN pip install git+https://github.com/SynthSys/pyOmeroUpload.git@py3upgrade
 
-RUN conda clean --all -f -y && \
+RUN pip install backoff argparse_prompt
+
+RUN conda install --quiet --yes -c conda-forge \
+    'imageio' \
+    'tifffile' && \
+    conda clean --all -f -y && \
     npm cache clean --force && \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \

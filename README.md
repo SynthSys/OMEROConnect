@@ -1,3 +1,8 @@
+******************************************************************************
+**Updated 12/07/21: This repository must be manually synchronised to the 'docker'
+sub-directory of the [OMERO Toolkit repository](https://github.com/SynthSys/omero-toolkit)
+whenever updates are made.**
+******************************************************************************
 
 # OMEROConnect
 
